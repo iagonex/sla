@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto de Extensão: Cuidado Integral à Saúde do Idoso - UCB</title>
+    <style>
+        /* Variáveis CSS para facilitar a mudança de cores */
+        :root {
+            --primary-color: #0056b3; /* Azul da UCB */
+            --secondary-color: #28a745; /* Verde para destaques */
+            --light-bg: #f8f9fa; /* Fundo claro */
+            --dark-text: #343a40; /* Texto escuro */
+            --white-text: #ffffff;
+            --gray-border: #dee2e6;
+            --accent-color: #ffc107; /* Amarelo para detalhes */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif; /* Usando Inter como solicitado */
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+            overflow-x: hidden; /* Evita rolagem horizontal */
+        }
+
+        /* Estilos do Cabeçalho e Navegação */
+        header {
+            background-color: var(--primary-color);
+            color: var(--white-text);
+            padding: 1.5rem 0;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.8rem; /* Aumentado para destaque */
+            letter-spacing: 1px;
+        }
+
+        header p {
+            font-size: 1.2rem; /* Aumentado para legibilidade */
+            margin-top: 10px;
+            font-weight: 300;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            background-color: #004085; /* Tom mais escuro do azul */
+            padding: 0.8rem 0;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        nav ul li {
+            margin: 0 20px; /* Aumentado espaçamento */
+        }
+
+        nav ul li a {
+            color: var(--white-text);
+            text-decoration: none;
+            font-weight: 600; /* Mais negrito */
+            transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
+            padding: 8px 12px; /* Aumentado para touch target */
+            border-radius: 8px; /* Cantos arredondados nos botões de navegação */
+        }
+
+        nav ul li a:hover {
+            color: var(--accent-color); /* Amarelo no hover */
+            transform: translateY(-2px); /* Pequeno efeito de elevação */
+        }
+
+        /* Estilos das Seções */
+        section {
+            padding: 80px 5%; /* Mais padding */
+            margin: 30px auto; /* Adicionado margin para espaçamento entre seções */
+            max-width: 1200px;
+            opacity: 0; /* Para animação de entrada */
+            transform: translateY(30px); /* Para animação de slide-up */
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out; /* Transição mais suave */
+            background-color: var(--white-text);
+            border-radius: 15px; /* Cantos arredondados nas seções */
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08); /* Sombra mais pronunciada */
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        section:nth-of-type(even) {
+            background-color: var(--light-bg);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+        }
+
+        section h2 {
+            font-size: 2.5rem; /* Maior título de seção */
+            color: var(--primary-color);
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        section h2::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 100px; /* Linha de destaque mais longa */
+            height: 4px; /* Linha de destaque mais grossa */
+            background-color: var(--secondary-color);
+            border-radius: 2px; /* Cantos arredondados na linha */
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px; /* Mais espaço entre blocos */
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .content-block {
+            flex: 1 1 calc(50% - 30px); /* Ajuste para o gap */
+            min-width: 320px; /* Aumentado para melhor leitura em telas menores */
+            background-color: var(--light-bg);
+            padding: 30px; /* Mais padding */
+            border-radius: 10px; /* Cantos mais arredondados */
+            box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .content-block:hover {
+            transform: translateY(-5px); /* Efeito de elevação no hover */
+        }
+
+        .content-block h3 {
+            color: var(--primary-color);
+            font-size: 1.8rem; /* Maior subtítulo */
+            margin-top: 0;
+            border-bottom: 2px solid var(--secondary-color); /* Linha sob o subtítulo */
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .content-block ul {
+            list-style: none; /* Removendo bullet points padrão */
+            padding: 0;
+        }
+
+        .content-block ul li {
+            margin-bottom: 12px; /* Mais espaçamento entre itens da lista */
+            position: relative;
+            padding-left: 25px; /* Espaço para ícone customizado */
+        }
+
+        .content-block ul li::before {
+            content: '✅'; /* Ícone customizado para lista */
+            position: absolute;
+            left: 0;
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+        }
+
+        .ods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adaptado para mais colunas */
+            gap: 25px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .ods-item {
+            background: linear-gradient(45deg, var(--primary-color), #007bff); /* Gradiente para ODS */
+            color: var(--white-text);
+            padding: 20px;
+            border-radius: 12px; /* Mais arredondado */
+            font-weight: bold;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ods-item::before { /* Efeito de brilho no hover */
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.1);
+            transform: skewX(-20deg);
+            transition: all 0.4s ease-in-out;
+        }
+
+        .ods-item:hover::before {
+            left: 100%;
+        }
+
+        .ods-item:hover {
+            transform: translateY(-8px) scale(1.02); /* Elevação e leve zoom */
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        /* Estilos da Galeria */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Cards maiores */
+            gap: 30px; /* Mais espaço */
+            margin-top: 40px;
+        }
+
+        .gallery-item {
+            background-color: var(--white-text);
+            border-radius: 12px; /* Mais arredondado */
+            overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.12); /* Sombra mais suave e proeminente */
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            cursor: pointer;
+            display: flex; /* Flexbox para layout interno */
+            flex-direction: column;
+            justify-content: space-between; /* Garante que a legenda fique no final */
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .gallery-item img, .gallery-item video, .gallery-item iframe {
+            width: 100%;
+            height: 250px; /* Altura um pouco maior para imagens/vídeos */
+            object-fit: cover;
+            display: block;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+
+        .gallery-item .caption {
+            padding: 15px 20px; /* Mais padding */
+            font-size: 1rem;
+            color: var(--dark-text);
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .gallery-item .video-placeholder {
+            width: 100%;
+            height: 250px;
+            background-color: #dcdcdc; /* Placeholder visual para vídeos */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 1.1rem;
+            text-align: center;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+
+        /* Cronograma */
+        .cronograma-table {
+            width: 100%;
+            border-collapse: separate; /* Para border-radius */
+            border-spacing: 0;
+            margin-top: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 10px; /* Arredondar a tabela */
+            overflow: hidden; /* Garante que o border-radius funcione */
+        }
+
+        .cronograma-table th, .cronograma-table td {
+            border: none; /* Remover bordas padrão */
+            padding: 15px 20px; /* Mais padding */
+            text-align: left;
+            border-bottom: 1px solid var(--gray-border); /* Linha divisória */
+        }
+
+        .cronograma-table th {
+            background-color: var(--primary-color);
+            color: var(--white-text);
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 1rem;
+        }
+
+        .cronograma-table tr:last-child td {
+            border-bottom: none; /* Sem linha na última linha */
+        }
+
+        .cronograma-table tr:nth-child(even) {
+            background-color: var(--light-bg);
+        }
+
+        .cronograma-table tr:hover {
+            background-color: #e0e7eb; /* Cor de hover mais clara */
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        /* Equipe */
+        .team-list {
+            list-style: none;
+            padding: 0;
+            text-align: center;
+        }
+
+        .team-list li {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            background-color: var(--light-bg);
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: inline-block; /* Para alinhar ao centro em mobile */
+            margin: 10px; /* Espaçamento entre os nomes */
+            max-width: 90%; /* Limita largura em telas pequenas */
+        }
+
+        .team-list strong {
+            color: var(--primary-color);
+        }
+
+        /* Contato */
+        .contact-info {
+            text-align: center;
+            margin-top: 30px;
+            background-color: var(--light-bg);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .contact-info p {
+            margin-bottom: 12px;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px; /* Espaço entre ícone e texto */
+        }
+
+        .contact-info a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .contact-info a:hover {
+            color: var(--secondary-color);
+        }
+
+        /* Estilos para o Gerador de Mensagens */
+        .message-generator-container {
+            background-color: var(--light-bg);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            text-align: center;
+            margin-top: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .message-generator-container textarea {
+            width: calc(100% - 40px); /* Ajuste para padding */
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid var(--gray-border);
+            border-radius: 8px;
+            font-size: 1rem;
+            resize: vertical; /* Permite redimensionar verticalmente */
+            min-height: 100px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .message-generator-container button {
+            background-color: var(--secondary-color);
+            color: var(--white-text);
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .message-generator-container button:hover {
+            background-color: #218838; /* Tom mais escuro no hover */
+            transform: translateY(-2px);
+        }
+
+        .message-output {
+            margin-top: 30px;
+            background-color: var(--white-text);
+            border: 1px dashed var(--secondary-color);
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 80px;
+            text-align: left;
+            font-style: italic;
+            color: var(--dark-text);
+            line-height: 1.8;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center; /* Centraliza verticalmente o texto quando vazio */
+            justify-content: center;
+        }
+
+        .loading-indicator {
+            display: none; /* Escondido por padrão */
+            margin-top: 20px;
+            font-style: italic;
+            color: var(--primary-color);
+        }
+
+        /* Rodapé */
+        footer {
+            background-color: var(--dark-text);
+            color: var(--white-text);
+            text-align: center;
+            padding: 2.5rem 0; /* Mais padding */
+            font-size: 0.95rem;
+            margin-top: 50px;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        /* Responsividade Avançada */
+        @media (max-width: 992px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .content-block {
+                flex: 1 1 100%;
+            }
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.2rem;
+            }
+            header p {
+                font-size: 1rem;
+            }
+            nav ul {
+                flex-direction: column;
+                padding: 0.5rem 0;
+            }
+            nav ul li {
+                margin: 5px 0;
+            }
+            section {
+                padding: 40px 3%;
+                margin: 20px auto;
+            }
+            section h2 {
+                font-size: 2rem;
+                margin-bottom: 25px;
+            }
+            .content-block {
+                padding: 20px;
+            }
+            .content-block h3 {
+                font-size: 1.6rem;
+            }
+            .ods-grid {
+                grid-template-columns: 1fr;
+            }
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            .cronograma-table th, .cronograma-table td {
+                padding: 10px 12px;
+                font-size: 0.85rem;
+            }
+            .message-generator-container textarea {
+                width: calc(100% - 30px); /* Ajuste para mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Cuidado Integral à Saúde do Idoso</h1>
+        <p>Intervenções de Enfermagem na Promoção de Oficinas de Motricidade e Cognição</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#home">Início</a></li>
+            <li><a href="#sobre">Sobre o Projeto</a></li>
+            <li><a href="#atividades">Atividades</a></li>
+            <li><a href="#resultados">Resultados e Impacto</a></li>
+            <li><a href="#galeria">Galeria</a></li>
+            <li><a href="#mensagens-bem-estar">Mensagens ✨</a></li>
+            <li><a href="#equipe">Equipe</a></li>
+            <li><a href="#contato">Contato</a></li>
+        </ul>
+    </nav>
+
+    <section id="home" class="scroll-animate">
+        <h2>Bem-vindo ao Projeto</h2>
+        <div class="container">
+            <p>Este projeto de extensão da Universidade Católica de Brasília, Curso de Enfermagem, visa promover o cuidado integral à saúde da pessoa idosa, com foco em intervenções de enfermagem para estimular a motricidade e cognição.</p>
+            <p>Realizamos diversas oficinas e atividades lúdicas na Casa do Vovô, em Vicente Pires, Distrito Federal, buscando aprimorar a qualidade de vida, o bem-estar e a socialização dos idosos.</p>
+            <img src="./imagens/foto7.jpg" alt="" style="width: 100%; height: auto; border-radius: 10px; margin-top: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+            <p class="caption" style="text-align: center; margin-top: 10px; font-size: 0.9rem; color: #555;">A equipe do projeto de extensão em um momento de confraternização com os idosos, celebrando a alegria e os resultados alcançados.</p>
+        </div>
+    </section>
+
+    <section id="sobre" class="scroll-animate">
+        <h2>Sobre o Projeto</h2>
+        <div class="container">
+            <div class="content-block">
+                <h3>Introdução e Contexto</h3>
+                <p>O envelhecimento é um processo complexo que acarreta transformações físicas, psicológicas e sociais. A lei 10.741 de 2003 (Estatuto do Idoso), alterada em 2022 para “pessoa idosa” (Lei 14.423), garante direitos e destaca a responsabilidade do poder público, comunidade e família na promoção da qualidade de vida. Compreender o idoso de modo integral, focando no processo de envelhecimento e não apenas na doença, é fundamental, especialmente frente a distúrbios funcionais e alterações naturais da idade.</p>
+                <p>As atividades lúdicas são ferramentas essenciais para a melhoria da autoestima, redução de fatores estressores, minimização da ansiedade e angústia. Elas permitem a expressão de sentimentos, comunicação e interação social, promovendo o desenvolvimento de afetividade e estimulando funções psíquicas e cognitivas.</p>
+            </div>
+            <div class="content-block">
+                <h3>Delimitação dos Problemas</h3>
+                <p>Durante a visita à Casa do Vovô em Vicente Pires, foi identificada a necessidade de diversos estímulos para os idosos, incluindo:</p>
+                <ul>
+                    <li>Estímulos cognitivos e psicomotores.</li>
+                    <li>Atividades que promovam a motricidade fina e grossa.</li>
+                    <li>Oportunidades de expressão através de artes e músicas.</li>
+                    <li>Atividades que tragam sentimentos de bem-estar e felicidade.</li>
+                    <li>Maior socialização entre os idosos, que possuem diferentes realidades.</li>
+                </ul>
+                <p>Diante dessas problemáticas, o projeto de extensão busca atuar com intervenções de enfermagem para suprir essas demandas.</p>
+            </div>
+            <div class="content-block">
+                <h3>Objetivos</h3>
+                <h4>Objetivo Geral</h4>
+                <p>Realizar intervenção de enfermagem na promoção de oficinas de motricidade e cognição para idosos na Casa do Vovô em Vicente Pires.</p>
+                <h4>Objetivos Específicos</h4>
+                <ul>
+                    <li>Promover oficina para estimulação cognitiva, através de jogos lúdicos, tabuleiro, jogos da memória, brincadeiras com bolas e bambolês, rodas de dança e arteterapia.</li>
+                    <li>Realizar atividades de motricidade para estimular a mobilidade fina e grossa, por meio de atividades manuais utilizando lápis de colorir, balões e bolinhas de papel crepom.</li>
+                    <li>Construir um ambiente acolhedor e senso de autocuidado, gerando um sentimento de satisfação, através de um dia de beleza para estimular o autocuidado e a promoção do bem-estar.</li>
+                </ul>
+            </div>
+            <div class="content-block">
+                <h3>Resultados Esperados</h3>
+                <p>Esperamos que, ao longo das oficinas, possamos contribuir para um maior estímulo cognitivo e motor, incorporando uma rotina de mobilidade e atividades cognitivas para proporcionar uma maior qualidade de vida e bem-estar, impactando positivamente nas atividades diárias de vida dos idosos.</p>
+                <h3>ODS (Objetivos de Desenvolvimento Sustentável)</h3>
+                <div class="ods-grid">
+                    <div class="ods-item">ODS 3 - Saúde e Bem-Estar</div>
+                    <div class="ods-item">ODS 16 - Paz, Justiça e Instituições Eficazes</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="atividades" class="scroll-animate">
+        <h2>Metodologia e Cronograma das Atividades</h2>
+        <div class="container" style="flex-direction: column; align-items: center;">
+            <p>A metodologia aplicada no projeto foi a pesquisa e ação, através de intervenções de enfermagem com práticas lúdicas, jogos coletivos, atividades individuais e manuais, visando solucionar as problemáticas relatadas pela Instituição e promover qualidade de vida e bem-estar para os idosos.</p>
+            <p>Cada dia de visita contou com uma temática e práticas diferentes, trabalhando diversas formas de atividades. O período de intervenção foi de Abril e Maio de 2025.</p>
+
+            <h3>Cronograma de Intervenção Detalhado</h3>
+            <table class="cronograma-table">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Ações</th>
+                        <th>Responsável</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>12/04/2025</td>
+                        <td>Atividade de Socialização: Conhecer os idosos, suas rotinas e toda a equipe multidisciplinar.</td>
+                        <td>Gislene Maia</td>
+                    </tr>
+                    <tr>
+                        <td>26/04/2025</td>
+                        <td>Atividade: Interação e Vivência - Acolhimento. Incluindo a dinâmica "Teia do Envolvimento", Dança Engraçada e Jogo da Memória.</td>
+                        <td>Eduarda Sousa</td>
+                    </tr>
+                    <tr>
+                        <td>28/04/2025</td>
+                        <td>Atividade de estímulo motor e cognitivo: Alongamento com música ao ar livre, brincadeira de não deixar o balão cair com TNTs coloridos, caminhadas e orações na capela.</td>
+                        <td>Angélica Cristina</td>
+                    </tr>
+                    <tr>
+                        <td>03/05/2025</td>
+                        <td>Atividade: "Dia da Beleza" - Promoção de bem-estar, autoestima e interação social com maquiagem e penteados, e sessão de fotos.</td>
+                        <td>Gislene Maia</td>
+                    </tr>
+                    <tr>
+                        <td>05/05/2025</td>
+                        <td>Atividade Cognitiva e Física: Alongamento e percepção das cores (símbolos coloridos no chão com música), Atividade de Tato (Caixa Misteriosa), Caça-palavras e desenhos para colorir, Jogo da Velha com Bambolê.</td>
+                        <td>Eduarda Sousa</td>
+                    </tr>
+                    <tr>
+                        <td>12/05/2025</td>
+                        <td>Atividades cognitiva e interativa (Jogos de mesa): Competição de quebra-cabeças, ensino e jogo de UNO, e outras opções como dominó, dama e baralho.</td>
+                        <td>Grazielle Caldas</td>
+                    </tr>
+                    <tr>
+                        <td>17/05/2025</td>
+                        <td>Atividade cognitiva, motora, emocional e social: Estímulo da memória e percepção musical (adivinhar canções), e estímulo da expressão corporal e interação com dança e movimentos.</td>
+                        <td>Déborah Freitas</td>
+                    </tr>
+                    <tr>
+                        <td>19/05/2025</td>
+                        <td>Encerramento: Confraternização de despedida com festa, música e dança. Entrega de lembrancinhas (livro de caça-palavras, santinho, bolinhas anti-estresse).</td>
+                        <td>Angélica</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="resultados" class="scroll-animate">
+        <h2>Resultados e Impacto do Projeto</h2>
+        <div class="container">
+            <div class="content-block">
+                <h3>Transformação e Bem-Estar</h3>
+                <p>O projeto "Intervenções de enfermagem na promoção de oficinas de motricidade e cognição para idosos na Casa do Vovô" foi um sucesso notável, impactando positivamente a vida dos 46 idosos atendidos. Desde o início, a receptividade foi imensa, e as atividades foram recebidas com grande entusiasmo.</p>
+                <p>As sete etapas do projeto, da ambientação à confraternização final, foram cruciais para ampliar a socialização, estimular a motricidade fina e cognitiva, e reafirmar o autocuidado dos idosos. A flexibilidade da equipe em adaptar as dinâmicas (como na "Teia do Envelhecimento", onde o foco mudou para o compartilhamento de vivências felizes) foi essencial para o aprofundamento do vínculo e o engajamento dos participantes.</p>
+            </div>
+            <div class="content-block">
+                <h3>Casos de Sucesso e Legado</h3>
+                <p>O impacto do projeto foi evidente em diversos momentos:</p>
+                <ul>
+                    <li><strong>Dona Zilma:</strong> Revelou um talento oculto ao criar um belo colar artesanal de barbante, surpreendendo a todos.</li>
+                    <li><strong>"Teia do Envelhecimento":</strong> A participação emocionante do filho de uma idosa, que expressou profunda alegria ao ouvir a mãe compartilhar um momento feliz (o casamento e o nascimento dele), reforçou o valor terapêutico da dinâmica.</li>
+                    <li><strong>Dona Jô (deficiente visual):</strong> Permaneceu sorridente e engajada durante toda a atividade musical, conectando-se ao mundo por meio da audição e das emoções, demonstrando o poder inclusivo da música.</li>
+                </ul>
+                <p>A alegria expressa pelos idosos na chegada da equipe e a demanda espontânea por encontros adicionais confirmam o valor das intervenções e o profundo impacto gerado em suas vidas. O projeto celebrou a vida e o potencial em todas as suas fases, consolidando o aprendizado da equipe sobre o cuidado integral à saúde do idoso com respeito e empatia.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="galeria" class="scroll-animate">
+        <h2>Nossa Galeria de Momentos</h2>
+        <p style="text-align: center; margin-bottom: 40px;">Confira alguns dos momentos mais marcantes e inspiradores do nosso projeto, que ilustram a alegria, o engajamento e o carinho compartilhados em cada atividade.</p>
+        <div class="gallery-grid">
+            <!-- Nova imagem: Integrantes do grupo -->
+            <div class="gallery-item">
+                <img src="./imagens/integrantes.jpg" alt="">
+                <div class="caption">Todos os integrantes do grupo de enfermagem, dedicados ao cuidado integral dos idosos.</div>
+            </div>
+
+            <!-- Imagens de Grupo e Interação Inicial -->
+            <div class="gallery-item">
+                <img src="./imagens/foto14.jpg" alt="">
+                <div class="caption">Equipe e idosos em um momento de acolhimento e interação inicial, promovendo socialização.</div>
+            </div>
+            <div class="gallery-item">
+                <img src="./imagens/foto5.jpg" alt="">
+                <div class="caption">Acolhimento e atenção individual, criando um vínculo genuíno e confortável com os idosos.</div>
+            </div>
+
+            <!-- Teia do Envelhecimento -->
+            <div class="gallery-item">
+                <img src="./imagens/foto11.jpg" alt="">
+                <div class="caption">A emocionante 'Teia do Envelhecimento': conexão e compartilhamento de vivências felizes.</div>
+            </div>
+             <div class="gallery-item">
+                <img src="./imagens/foto4.jpg" alt="">
+                <div class="caption">Dona Zilma demonstrando sua habilidade manual notável, criando um belo colar artesanal.</div>
+            </div>
+
+            <!-- Dinâmica de Dança -->
+            <div class="gallery-item">
+                <img src="./imagens/foto29.jpg" alt="">
+                <div class="caption">Alegria e movimento: idosos e discentes em um animado momento de dança.</div>
+            </div>
+
+            <!-- Alongamento e Motricidade com Balões -->
+            <div class="gallery-item">
+                <img src="./imagens/foto40.jpg" alt="">
+                <div class="caption">Dinâmicas de motricidade e equilíbrio: idosos participando de atividades com balões ao ar livre.</div>
+            </div>
+            <div class="gallery-item">
+                <img src="./imagens/foto38.jpg" alt="">
+                <div class="caption">Inclusão e diversão: idoso em cadeira de rodas participa ativamente da dinâmica de balões.</div>
+            </div>
+
+            <!-- Caixa Misteriosa Tátil -->
+            <div class="gallery-item">
+                <img src="./imagens/foto45.jpg" alt="">
+                <div class="caption">Curiosidade e alegria: idosos explorando os mistérios da 'Caixa Tátil', estimulando os sentidos.</div>
+            </div>
+            <div class="gallery-item">
+                <img src="./imagens/foto48.jpg" alt="">
+                <div class="caption">Foco e percepção: idoso engajado na atividade da 'Caixa Misteriosa Tátil', exercitando o tato e a memória.</div>
+            </div>
+
+            <!-- Oficina de Motricidade Fina (Colagem/Colorir) -->
+            <div class="gallery-item">
+                <img src="./imagens/foto30.jpg" alt="">
+                <div class="caption">Concentração e criatividade: idosa engajada na atividade de colorir mandalas.</div>
+            </div>
+            <div class="gallery-item">
+                <img src="./imagens/foto49.jpg" alt="">
+                <div class="caption">Destreza e criatividade: idosas se dedicam à oficina de motricidade fina com colagens.</div>
+            </div>
+
+            <!-- Dia da Beleza -->
+            <div class="gallery-item">
+                <img src="./imagens/foto42.jpg" alt="">
+                <div class="caption">Sorriso no "Dia da Beleza": um momento de autoapreciação e reforço da autoestima.</div>
+            </div>
+            <div class="gallery-item">
+                <img src="./imagens/foto19.jpg" alt="">
+                <div class="caption">Toque de carinho e realce da beleza: um close dos momentos especiais do 'Dia da Beleza'.</div>
+            </div>
+            <div class="gallery-item">
+                <img src="./imagens/foto25.jpg" alt="">
+                <div class="caption">A satisfação no olhar: idosa apreciando o resultado do 'Dia da Beleza'.</div>
+            </div>
+
+            <!-- Jogos de Mesa (Quebra-cabeça e UNO) -->
+            <div class="gallery-item">
+                <img src="./imagens/foto54.jpg" alt="">
+                <div class="caption">Cuidado individualizado: apoio na montagem do quebra-cabeça, adaptando à cada necessidade.</div>
+            </div>
+            <div class="gallery-item">
+                <img src="./imagens/foto58.jpg" alt="">
+                <div class="caption">Orgulho e satisfação: idoso exibe seu quebra-cabeça montado, celebrando a conquista.</div>
+            </div>
+            <div class="gallery-item">
+                <img src="./imagens/foto56.jpg" alt="">
+                <div class="caption">Inovação e diversão: discente da UCB ensinando o jogo UNO, promovendo novos aprendizados e interação.</div>
+            </div>
+
+            <!-- Confraternização e Despedida -->
+            <div class="gallery-item">
+                <img src="./imagens/foto6.jpg" alt="">
+                <div class="caption">Gesto de carinho: idoso recebe lembrancinha de despedida, simbolizando a gratidão do projeto.</div>
+            </div>
+            <div class="gallery-item">
+                <img src="./imagens/ft1.jpg" alt="">
+                <div class="caption">Conexão e carinho: idosa explorando o livro de caça-palavras, parte da lembrancinha de despedida.</div>
+            </div>
+
+            <!-- Espaços para Vídeos -->
+            <div class="gallery-item">
+                <video controls src="./videos/video1.mp4" style="width: 100%; height: 250px; object-fit: cover; border-top-left-radius: 12px; border-top-right-radius: 12px;"></video>
+                <div class="caption">Roda de Música: Idosos e a equipe em momentos de harmonia e expressão musical.</div>
+                <!-- Coloque aqui o código <video> ou <iframe> para o vídeo da Roda de Música -->
+            </div>
+            <div class="gallery-item">
+                <video controls src="./videos/video2.mp4" style="width: 100%; height: 250px; object-fit: cover; border-top-left-radius: 12px; border-top-right-radius: 12px;"></video>
+                <div class="caption">Jogando UNO: A diversão e o aprendizado em ação durante o jogo de cartas com os idosos.</div>
+                <!-- Coloque aqui o código <video> ou <iframe> para o vídeo Jogando UNO -->
+            </div>
+            <div class="gallery-item">
+                <video controls src="./videos/video3.mp4" style="width: 100%; height: 250px; object-fit: cover; border-top-left-radius: 12px; border-top-right-radius: 12px;"></video>
+                <div class="caption">Roda de Música 2: Mais um registro emocionante de canto e interação musical no projeto.</div>
+                <!-- Coloque aqui o código <video> ou <iframe> para o vídeo da segunda Roda de Música -->
+            </div>
+        </div>
+    </section>
+
+    <section id="mensagens-bem-estar" class="scroll-animate">
+        <h2>✨ Gerador de Mensagens de Bem-Estar ✨</h2>
+        <div class="message-generator-container">
+            <p>Precisa de uma mensagem inspiradora para alguém especial ou para o seu dia? Use o nosso gerador para criar mensagens de bem-estar!</p>
+            <textarea id="messageInput" placeholder="Ex: Uma mensagem sobre alegria e superação para idosos." rows="4"></textarea>
+            <button id="generateMessageBtn">Gerar Mensagem ✨</button>
+            <p class="loading-indicator" id="loadingMessage">Gerando sua mensagem...</p>
+            <div class="message-output" id="generatedMessage">Sua mensagem aparecerá aqui.</div>
+        </div>
+    </section>
+
+    <section id="equipe" class="scroll-animate">
+        <h2>Nossa Equipe</h2>
+        <p style="text-align: center; margin-bottom: 30px;">Conheça os profissionais e estudantes dedicados que tornaram este projeto possível.</p>
+        <div class="container" style="flex-direction: column; align-items: center;">
+            <h3>Discentes:</h3>
+            <ul class="team-list">
+                <li>Angélica Cristina Cavalcante da Luz</li>
+                <li>Déborah Freitas</li>
+                <li>Eduarda Sousa de Sá</li>
+                <li>Gislene Maia de Camargo</li>
+                <li>Grazielle Caldas de Oliveira</li>
+            </ul>
+            <h3>Docente:</h3>
+            <ul class="team-list">
+                <li>Neuza Maria de Matos</li>
+            </ul>
+            <p style="text-align: center; margin-top: 20px;">Este projeto foi desenvolvido por estudantes do Curso de Enfermagem da <strong>Universidade Católica de Brasília</strong>.</p>
+        </div>
+    </section>
+
+    <section id="contato" class="scroll-animate">
+        <h2>Contato e Local</h2>
+        <p style="text-align: center; margin-bottom: 30px;">Para mais informações sobre o projeto ou a instituição, entre em contato:</p>
+        <div class="contact-info">
+            <p>📞 Telefone: (61) 3597-1698</p>
+            <p>📧 E-mail: <a href="mailto:casadovovo2@gmail.com">casadovovo2@gmail.com</a> / <a href="mailto:grandevobsb@gmail.com">grandevobsb@gmail.com</a></p>
+            <p>📱 WhatsApp: <a href="https://wa.me/5561985782317" target="_blank">+55 61 9 8578-2317</a></p>
+            <p>📍 Local: Grandevo - Centro Especializado em Idosos LTDA. <br> Rua 10B, Chácara 135, Lotes 1 e 4 - Vicente Pires, Distrito Federal.</p>
+            <p>Período da Intervenção: Abril e Maio de 2025.</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Projeto de Extensão: Cuidado Integral à Saúde do Idoso - Universidade Católica de Brasília. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        // Animação de rolagem para as seções
+        document.addEventListener('DOMContentLoaded', function() {
+            // Removemos a inicialização do Lucide Icons, pois o erro persiste.
+            // Os ícones SVG foram substituídos por emojis ou texto simples no HTML.
+            
+            const sections = document.querySelectorAll('.scroll-animate');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1 // A seção será visível quando 10% dela estiver na viewport
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target); // Para que a animação ocorra apenas uma vez
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // Rolagem suave para os links do menu
+            document.querySelectorAll('nav a').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // Lógica para o Gerador de Mensagens de Bem-Estar (Gemini API)
+            const generateMessageBtn = document.getElementById('generateMessageBtn');
+            const messageInput = document.getElementById('messageInput');
+            const generatedMessageDiv = document.getElementById('generatedMessage');
+            const loadingMessage = document.getElementById('loadingMessage');
+
+            generateMessageBtn.addEventListener('click', async () => {
+                const userInput = messageInput.value.trim();
+                let prompt = "Gere uma mensagem curta e inspiradora de bem-estar para pessoas idosas. O tone deve ser positivo, acolhedor e focado na valorização da vida e da experiência. Deve ter no máximo 80 palavras.";
+
+                if (userInput) {
+                    prompt = `Gere uma mensagem curta e inspiradora de bem-estar para pessoas idosas, focando em: "${userInput}". O tone deve ser positivo, acolhedor e focado na valorização da vida e da experiência. Deve ter no máximo 80 palavras.`;
+                }
+
+                loadingMessage.style.display = 'block'; // Mostra o indicador de carregamento
+                generatedMessageDiv.textContent = ''; // Limpa a mensagem anterior
+
+                try {
+                    let chatHistory = [];
+                    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                    const payload = { contents: chatHistory };
+                    const apiKey = "AIzaSyDF9MdCcz_CPWmwtnOua_Hw1RnAP7waP2A"; // A chave da API será fornecida em tempo de execução
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const result = await response.json();
+                    
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const text = result.candidates[0].content.parts[0].text;
+                        generatedMessageDiv.textContent = text;
+                    } else {
+                        generatedMessageDiv.textContent = 'Erro ao gerar mensagem. Tente novamente.';
+                        console.error('Estrutura de resposta da API inesperada:', result);
+                    }
+                } catch (error) {
+                    generatedMessageDiv.textContent = 'Erro na comunicação com a API. Verifique sua conexão ou tente mais tarde.';
+                    console.error('Erro na chamada da API Gemini:', error);
+                } finally {
+                    loadingMessage.style.display = 'none'; // Esconde o indicador de carregamento
+                }
+            });
+        });
+    </script>
+</body>
+</html>
